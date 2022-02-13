@@ -1,0 +1,15 @@
+site_name: RCJ Soccer Sim
+theme:
+  name: material
+  palette:
+    primary: teal
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+nav:
+  - Introduction: index.md
+  - Getting Started: getting_started.md
+  - How to program your robot: how_to_robot.md
+  - Inter-robot communication: communication_between_robots.md
+  - How to run the simulation: how_to_run_sim.md
