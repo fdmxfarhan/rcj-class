@@ -1,5 +1,6 @@
 import math
 import utils
+import struct
 from rcj_soccer_robot import RCJSoccerRobot, TIME_STEP
 
 
@@ -68,4 +69,5 @@ class MyRobot1(RCJSoccerRobot):
                         self.move(self.ball_pos)
                 else: 
                     self.move(self.yellowGoal)
-                    
+                packet = struct.pack("iii?", 100, 150, 200, True)
+                self.team_emitter.send(packet)
