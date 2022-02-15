@@ -18,6 +18,7 @@ class MyRobot1(RCJSoccerRobot):
             self.ball_pos = [self.ball_x, self.ball_y]
         else:
             self.isBall = False
+        self.behind_ball = [self.ball_x, self.ball_y - 0.2]
     def moveToAngle(self, angle):
         if angle > 180: angle -= 360
         if angle <-180: angle += 360
@@ -56,11 +57,15 @@ class MyRobot1(RCJSoccerRobot):
         self.isBall = False
         self.yellowGoal = [0, -0.7]
         self.blueGoal = [0, 0.7]
+        self.ball_pos = [0, 0]
         while self.robot.step(TIME_STEP) != -1:
             if self.is_new_data():
                 self.readData()
                 if self.isBall:
-                    self.move(self.ball_pos)
+                    if utils.getDistance(self.robot_pos, self.behind_ball) > 0.2:
+                        self.move(self.behind_ball)
+                    else:
+                        self.move(self.ball_pos)
                 else: 
                     self.move(self.yellowGoal)
                     
