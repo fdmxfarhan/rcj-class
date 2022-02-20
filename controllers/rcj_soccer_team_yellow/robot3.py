@@ -3,7 +3,6 @@ import utils
 import struct
 from rcj_soccer_robot import RCJSoccerRobot, TIME_STEP
 
-
 class MyRobot3(RCJSoccerRobot):
     def readData(self):
         self.heading = self.get_compass_heading()*180/math.pi
