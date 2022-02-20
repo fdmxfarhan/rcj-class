@@ -6,3 +6,7 @@
 {"datetime": "2022-02-20T17:33:34.289909Z", "matchtime": 55.871999999969034, "event": "INSIDE_PENALTY_FOR_TOO_LONG", "payload": {"type": "robot", "robot_name": "Y1"}}
 {"datetime": "2022-02-20T17:33:51.991028Z", "matchtime": 69.75999999996134, "event": "LACK_OF_PROGRESS", "payload": {"type": "robot", "robot_name": "Y3"}}
 {"datetime": "2022-02-20T17:33:53.206875Z", "matchtime": 70.97599999996066, "event": "LACK_OF_PROGRESS", "payload": {"type": "robot", "robot_name": "Y1"}}
+{"datetime": "2022-02-20T17:34:04.905042Z", "matchtime": 77.50399999995705, "event": "INSIDE_PENALTY_FOR_TOO_LONG", "payload": {"type": "robot", "robot_name": "Y2"}}
+{"datetime": "2022-02-20T17:34:24.296622Z", "matchtime": 92.47999999995272, "event": "INSIDE_PENALTY_FOR_TOO_LONG", "payload": {"type": "robot", "robot_name": "B2"}}
+{"datetime": "2022-02-20T17:34:27.068677Z", "matchtime": 94.07999999995326, "event": "INSIDE_PENALTY_FOR_TOO_LONG", "payload": {"type": "robot", "robot_name": "B3"}}
+{"datetime": "2022-02-20T17:34:27.338953Z", "matchtime": 94.33599999995334, "event": "GOAL", "payload": {"team_name": "The Yellows", "score_yellow": 1, "score_blue": 0}}

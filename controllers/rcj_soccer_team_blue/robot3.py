@@ -91,10 +91,13 @@ class MyRobot3(RCJSoccerRobot):
         self.robot_id = int(self.name[1])
         while self.robot.step(TIME_STEP) != -1:
             if self.is_new_data():
+                self.waitingForKick = self.get_new_data()['waiting_for_kickoff']
                 self.readData()
                 self.sendTeamData()
                 self.getTeamData()
-                if self.isBall:
+                if self.waitingForKick:
+                    self.stop()
+                elif self.isBall:
                     if utils.getDistance(self.robot_pos, self.behind_ball) > 0.2:
                         self.move(self.behind_ball)
                     else:
