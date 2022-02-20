@@ -19,6 +19,8 @@ class MyRobot1(RCJSoccerRobot):
             self.ball_pos = [self.ball_x, self.ball_y]
         else:
             self.isBall = False
+        self.robot_x = self.robot_pos[0]
+        self.robot_y = self.robot_pos[1]
         self.behind_ball = [self.ball_x, self.ball_y - 0.2]
     def moveToAngle(self, angle):
         if angle > 180: angle -= 360
@@ -52,6 +54,24 @@ class MyRobot1(RCJSoccerRobot):
     def stop(self):
         self.right_motor.setVelocity(0)
         self.left_motor.setVelocity(0)
+    def sendTeamData(self):
+        packet = struct.pack(utils.dataFormat, self.robot_id, self.robot_x, self.robot_y, self.isBall, self.ball_x, self.ball_y)
+        self.team_emitter.send(packet)
+    def getTeamData(self):
+        self.robot_positions[self.robot_id - 1][0] = self.robot_x
+        self.robot_positions[self.robot_id - 1][1] = self.robot_y
+        while self.is_new_team_data():
+            packet = self.team_receiver.getData()
+            self.team_receiver.nextPacket()
+            unpacked = struct.unpack(utils.dataFormat, packet)
+            self.robot_positions[unpacked[0] - 1][0] = unpacked[1]
+            self.robot_positions[unpacked[0] - 1][1] = unpacked[2]
+            if not self.isBall and unpacked[3]:
+                self.ball_x = unpacked[4]
+                self.ball_y = unpacked[5]
+                self.ball_pos = [self.ball_x, self.ball_y]
+                self.behind_ball = [self.ball_x, self.ball_y - 0.2]
+                self.isBall = True
     def run(self):
         self.ball_x = 0
         self.ball_y = 0
@@ -59,9 +79,13 @@ class MyRobot1(RCJSoccerRobot):
         self.yellowGoal = [0, -0.7]
         self.blueGoal = [0, 0.7]
         self.ball_pos = [0, 0]
+        self.robot_positions = [ [0, 0] , [0, 0] , [0, 0] ]
+        self.robot_id = int(self.name[1])
         while self.robot.step(TIME_STEP) != -1:
             if self.is_new_data():
                 self.readData()
+                self.sendTeamData()
+                self.getTeamData()
                 if self.isBall:
                     if utils.getDistance(self.robot_pos, self.behind_ball) > 0.2:
                         self.move(self.behind_ball)
@@ -69,5 +93,4 @@ class MyRobot1(RCJSoccerRobot):
                         self.move(self.ball_pos)
                 else: 
                     self.move(self.yellowGoal)
-                packet = struct.pack("iii?", 100, 150, 200, True)
-                self.team_emitter.send(packet)
+                
