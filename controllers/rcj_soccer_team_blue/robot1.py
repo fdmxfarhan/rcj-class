@@ -1,6 +1,7 @@
 import math
 import utils
 import struct
+import geometry
 from rcj_soccer_robot import RCJSoccerRobot, TIME_STEP
 
 
@@ -29,7 +30,6 @@ class MyRobot1(RCJSoccerRobot):
         self.robot_x = self.robot_pos[0]
         self.robot_y = self.robot_pos[1]
         self.behind_ball = [self.ball_x, self.ball_y - 0.2]
-
     def moveToAngle(self, angle):
         if angle > 180: angle -= 360
         if angle <-180: angle += 360
@@ -80,15 +80,27 @@ class MyRobot1(RCJSoccerRobot):
                 self.ball_pos = [self.ball_x, self.ball_y]
                 self.behind_ball = [self.ball_x, self.ball_y - 0.2]
                 self.isBall = True
+        distances = [0, 0, 0]
+        distances[0] = utils.getDistance([self.robot_positions[0][0], self.robot_positions[0][1]], self.ball_pos)
+        distances[1] = utils.getDistance([self.robot_positions[1][0], self.robot_positions[1][1]], self.ball_pos)
+        distances[2] = utils.getDistance([self.robot_positions[2][0], self.robot_positions[2][1]], self.ball_pos)
+        if distances[self.robot_id - 1] == max(distances):
+            self.gaolKeeper = True
+        else:
+            self.gaolKeeper = False
+
     def run(self):
         self.ball_x = 0
         self.ball_y = 0
         self.isBall = False
-        self.T_Goal = [0, -0.7]
-        self.O_Goal = [0, 0.7]
+        self.T_Goal = [0, -0.65]
+        self.O_Goal = [0, 0.65]
         self.ball_pos = [0, 0]
-        self.robot_positions = [ [0, 0] , [0, 0] , [0, 0] ]
+        self.robot_positions = [[0, 0] , [0, 0] , [0, 0]]
         self.robot_id = int(self.name[1])
+        self.gaolKeeper = False
+        self.goalKeeper_x = 0
+        self.last_ball_pos = self.ball_pos
         while self.robot.step(TIME_STEP) != -1:
             if self.is_new_data():
                 self.waitingForKick = self.get_new_data()['waiting_for_kickoff']
@@ -97,11 +109,24 @@ class MyRobot1(RCJSoccerRobot):
                 self.getTeamData()
                 if self.waitingForKick:
                     self.stop()
-                elif self.isBall:
-                    if utils.getDistance(self.robot_pos, self.behind_ball) > 0.2:
-                        self.move(self.behind_ball)
+                elif self.gaolKeeper:
+                    ball_line = geometry.Line()
+                    ball_line.drawLineWithTwoPoint({'x': self.ball_pos[0], 'y': self.ball_pos[1]}, {'x': self.last_ball_pos[0], 'y': self.last_ball_pos[1]})
+                    goal_line = geometry.Line(1, 0, -self.T_Goal[1])
+                    intersection = ball_line.getIntersectionWithLine(goal_line)
+                    if intersection:
+                        self.goalKeeper_x = intersection['x']
                     else:
-                        self.move(self.ball_pos)
-                else: 
-                    self.move(self.T_Goal)
-                
+                        self.goalKeeper_x = self.ball_x
+                    if self.goalKeeper_x > 0.3: self.goalKeeper_x = 0.3
+                    if self.goalKeeper_x <-0.3: self.goalKeeper_x =-0.3
+                    self.move([self.goalKeeper_x , self.T_Goal[1]])
+                else:
+                    if self.isBall:
+                        if utils.getDistance(self.robot_pos, self.behind_ball) > 0.2:
+                            self.move(self.behind_ball)
+                        else:
+                            self.move(self.ball_pos)
+                    else: 
+                        self.move(self.T_Goal)
+                self.last_ball_pos = self.ball_pos
