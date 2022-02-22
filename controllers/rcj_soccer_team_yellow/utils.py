@@ -3,11 +3,9 @@ dataFormat = "idd?dd"
 
 def get_direction(ball_vector: list) -> int:
     """Get direction to navigate robot to face the ball
-
     Args:
         ball_vector (list of floats): Current vector of the ball with respect
             to the robot.
-
     Returns:
         int: 0 = forward, -1 = right, 1 = left
     """

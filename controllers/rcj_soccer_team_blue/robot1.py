@@ -2,6 +2,7 @@ import math
 import utils
 import struct
 import geometry
+import time
 from rcj_soccer_robot import RCJSoccerRobot, TIME_STEP
 
 
@@ -17,6 +18,7 @@ class MyRobot1(RCJSoccerRobot):
             self.robot_pos[0] *= -1
             self.robot_pos[1] *= -1
         self.sonar = self.get_sonar_values()
+        print(self.sonar)
         if self.is_new_ball_data():
             self.isBall = True
             self.ball_data = self.get_new_ball_data()
