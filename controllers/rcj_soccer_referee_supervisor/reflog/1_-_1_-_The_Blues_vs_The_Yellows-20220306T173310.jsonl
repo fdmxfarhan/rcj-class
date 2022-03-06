@@ -1,0 +1,17 @@
+{"datetime": "2022-03-06T17:33:10.979983Z", "matchtime": 0, "event": "KICKOFF", "payload": {"robot_name": "B3", "team_name": "B"}}
+{"datetime": "2022-03-06T17:33:11.009984Z", "matchtime": 0, "event": "MATCH_START", "payload": {"score_yellow": 0, "score_blue": 0, "total_match_time": 600, "team_name_yellow": "The Yellows", "team_name_blue": "The Blues", "match_id": "1", "halftime": 1}}
+{"datetime": "2022-03-06T17:33:15.193162Z", "matchtime": 4.223999999997659, "event": "GOAL", "payload": {"team_name": "The Yellows", "score_yellow": 1, "score_blue": 0}}
+{"datetime": "2022-03-06T17:33:18.449401Z", "matchtime": 7.231999999995992, "event": "KICKOFF", "payload": {"robot_name": "B3", "team_name": "B"}}
+{"datetime": "2022-03-06T17:33:22.909179Z", "matchtime": 11.327999999993722, "event": "GOAL", "payload": {"team_name": "The Yellows", "score_yellow": 2, "score_blue": 0}}
+{"datetime": "2022-03-06T17:33:26.128733Z", "matchtime": 14.335999999992055, "event": "KICKOFF", "payload": {"robot_name": "B3", "team_name": "B"}}
+{"datetime": "2022-03-06T17:33:46.544173Z", "matchtime": 24.895999999986202, "event": "LACK_OF_PROGRESS", "payload": {"type": "ball"}}
+{"datetime": "2022-03-06T17:33:51.342371Z", "matchtime": 29.439999999983684, "event": "LACK_OF_PROGRESS", "payload": {"type": "robot", "robot_name": "B1"}}
+{"datetime": "2022-03-06T17:33:51.344373Z", "matchtime": 29.439999999983684, "event": "LACK_OF_PROGRESS", "payload": {"type": "robot", "robot_name": "B2"}}
+{"datetime": "2022-03-06T17:33:51.850539Z", "matchtime": 29.887999999983435, "event": "GOAL", "payload": {"team_name": "The Yellows", "score_yellow": 3, "score_blue": 0}}
+{"datetime": "2022-03-06T17:33:55.326686Z", "matchtime": 32.89599999998177, "event": "KICKOFF", "payload": {"robot_name": "B3", "team_name": "B"}}
+{"datetime": "2022-03-06T17:34:01.594681Z", "matchtime": 37.43999999997925, "event": "GOAL", "payload": {"team_name": "The Yellows", "score_yellow": 4, "score_blue": 0}}
+{"datetime": "2022-03-06T17:34:05.279681Z", "matchtime": 40.44799999997758, "event": "KICKOFF", "payload": {"robot_name": "B3", "team_name": "B"}}
+{"datetime": "2022-03-06T17:34:14.969362Z", "matchtime": 46.271999999974355, "event": "GOAL", "payload": {"team_name": "The Yellows", "score_yellow": 5, "score_blue": 0}}
+{"datetime": "2022-03-06T17:34:18.395358Z", "matchtime": 49.27999999997269, "event": "KICKOFF", "payload": {"robot_name": "B3", "team_name": "B"}}
+{"datetime": "2022-03-06T17:34:22.915365Z", "matchtime": 53.56799999997031, "event": "GOAL", "payload": {"team_name": "The Yellows", "score_yellow": 6, "score_blue": 0}}
+{"datetime": "2022-03-06T17:34:26.311369Z", "matchtime": 56.575999999968644, "event": "KICKOFF", "payload": {"robot_name": "B3", "team_name": "B"}}

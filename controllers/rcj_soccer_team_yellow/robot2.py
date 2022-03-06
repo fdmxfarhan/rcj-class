@@ -2,6 +2,7 @@ import math
 import utils
 import struct
 import geometry
+import time
 from rcj_soccer_robot import RCJSoccerRobot, TIME_STEP
 
 
@@ -21,7 +22,7 @@ class MyRobot2(RCJSoccerRobot):
             self.isBall = True
             self.ball_data = self.get_new_ball_data()
             self.ball_angle = math.atan2(self.ball_data['direction'][1], self.ball_data['direction'][0])*180/math.pi
-            self.ball_distance = abs(0.0166/math.sin(self.ball_data['direction'][2]))
+            self.ball_distance = abs(0.0166666/(abs(self.ball_data['direction'][2])/math.sqrt(1 - self.ball_data['direction'][2]**2)))
             self.ball_x =-math.sin((self.ball_angle + self.heading)*math.pi/180) * self.ball_distance + self.robot_pos[0]
             self.ball_y = math.cos((self.ball_angle + self.heading)*math.pi/180) * self.ball_distance + self.robot_pos[1]
             self.ball_pos = [self.ball_x, self.ball_y]
@@ -55,10 +56,13 @@ class MyRobot2(RCJSoccerRobot):
             else:
                 self.right_motor.setVelocity(utils.velocity(-10 - angle/5))
                 self.left_motor.setVelocity(utils.velocity(-10 + angle/5))
-    def move(self, dest):
+    def move(self, dest, stop=False):
         dest_angle = math.atan2(self.robot_pos[0]-dest[0],dest[1]-self.robot_pos[1])*180/math.pi
         angle = self.heading - dest_angle
-        self.moveToAngle(angle)
+        if stop and utils.getDistance(dest, self.robot_pos) < 0.1:
+            self.stop()
+        else:
+            self.moveToAngle(angle)
     def stop(self):
         self.right_motor.setVelocity(0)
         self.left_motor.setVelocity(0)
@@ -88,7 +92,45 @@ class MyRobot2(RCJSoccerRobot):
             self.gaolKeeper = True
         else:
             self.gaolKeeper = False
-
+        ######################### Lack Of Progress Detection
+        if utils.getDistance(self.ball_pos, self.startBallPos) > 0.1:
+            self.startTime = time.time()
+            self.startBallPos = self.ball_pos
+            self.lackOfProgress = False
+        else:
+            if time.time() - self.startTime > 4:
+                self.lackOfProgress = True
+            else:
+                self.lackOfProgress = False
+    def ocupiedSpot(self, spot):
+        for i in range(3):
+            if utils.getDistance(spot, self.robot_positions[i]) < 0.08:
+                return True
+        if utils.getDistance(spot, self.ball_pos) < 0.08:
+            return True
+        return False
+    def guessNutralSpot(self):
+        nutralSpots = [
+            [ 0, 0],
+            [ 0, 0.2],
+            [ 0,-0.2],
+            [ 0.3, 0.3],
+            [-0.3, 0.3],
+            [ 0.3,-0.3],
+            [-0.3,-0.3],
+        ]
+        unocupiedNutralSpots = []
+        for spot in nutralSpots:
+            if not self.ocupiedSpot(spot):
+                unocupiedNutralSpots.append(spot)
+        nearestSpot = unocupiedNutralSpots[0]
+        minDistance = 10
+        for spot in unocupiedNutralSpots:
+            distance = utils.getDistance(spot, self.ball_pos)
+            if distance < minDistance:
+                minDistance = distance
+                nearestSpot = spot
+        return nearestSpot
     def run(self):
         self.ball_x = 0
         self.ball_y = 0
@@ -101,6 +143,9 @@ class MyRobot2(RCJSoccerRobot):
         self.gaolKeeper = False
         self.goalKeeper_x = 0
         self.last_ball_pos = self.ball_pos
+        self.lackOfProgress = False
+        self.startTime = time.time()
+        self.startBallPos = [0, 0]
         while self.robot.step(TIME_STEP) != -1:
             if self.is_new_data():
                 self.waitingForKick = self.get_new_data()['waiting_for_kickoff']
@@ -109,6 +154,9 @@ class MyRobot2(RCJSoccerRobot):
                 self.getTeamData()
                 if self.waitingForKick:
                     self.stop()
+                elif self.lackOfProgress:
+                    nearestSpot = self.guessNutralSpot()
+                    self.move([nearestSpot[0], nearestSpot[1] - 0.2], stop=True)
                 elif self.gaolKeeper:
                     ball_line = geometry.Line()
                     ball_line.drawLineWithTwoPoint({'x': self.ball_pos[0], 'y': self.ball_pos[1]}, {'x': self.last_ball_pos[0], 'y': self.last_ball_pos[1]})
